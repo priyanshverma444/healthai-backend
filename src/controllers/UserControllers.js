@@ -214,6 +214,228 @@ const updateUserImage = async (req, res) => {
   }
 };
 
+// HTML Email Template for VedaBot
+const getEmailTemplate = (resetUrl) => {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Your VedaBot Password</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #AFD9B1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            background: linear-gradient(135deg, #AFD9B1 0%, #9BC7A0 100%);
+        }
+        
+        .logo {
+            background-color: #065f46;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(6, 95, 70, 0.3);
+        }
+        
+        .email-title {
+            color: #065f46;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .email-body {
+            padding: 40px 30px;
+            background-color: #AFD9B1;
+            color: #065f46;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #047857;
+        }
+        
+        .reset-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            color: white !important;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(6, 95, 70, 0.3);
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .expiry-notice {
+            background-color: rgba(6, 95, 70, 0.1);
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #065f46;
+        }
+        
+        .alternative-text {
+            font-size: 14px;
+            color: #047857;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+        
+        .alternative-link {
+            color: #065f46;
+            word-break: break-all;
+            font-family: monospace;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        
+        .email-footer {
+            background-color: rgba(6, 95, 70, 0.1);
+            padding: 30px;
+            text-align: center;
+            color: #065f46;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            margin-top: 20px;
+        }
+        
+        .footer-links a {
+            color: #065f46;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        
+        .security-notice {
+            background-color: rgba(6, 95, 70, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            font-size: 14px;
+            color: #065f46;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .email-body {
+                padding: 20px;
+            }
+            
+            .email-title {
+                font-size: 24px;
+            }
+            
+            .reset-button {
+                padding: 14px 28px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1 class="email-title">VedaBot</h1>
+        </div>
+        
+        <!-- Body -->
+        <div class="email-body">
+            <div class="greeting">Hello there! 👋</div>
+            
+            <div class="message">
+                We received a request to reset the password for your VedaBot account. If you made this request, click the button below to create a new password.
+            </div>
+            
+            <div class="button-container">
+                <a href="${resetUrl}" class="reset-button">Reset Your Password</a>
+            </div>
+            
+            <div class="expiry-notice">
+                <span style="margin-right: 8px;">⏰</span>
+                <strong>Important:</strong> This password reset link will expire in 1 hour for your security.
+            </div>
+            
+            <div class="security-notice">
+                <span style="margin-right: 8px;">🔒</span>
+                <strong>Security Tip:</strong> If you didn't request this password reset, you can safely ignore this email. Your account remains secure and no changes have been made.
+            </div>
+            
+            <div class="alternative-text">
+                If the button above doesn't work, you can copy and paste this link into your browser:
+                <div class="alternative-link">${resetUrl}</div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div>
+                <strong>VedaBot Team</strong><br>
+                Take your health into your own hands
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+                © 2025 VedaBot. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `;
+};
+
 // @desc Forgot Password
 // @route POST /api/users/forgot-password
 // @access public
@@ -243,10 +465,10 @@ const forgotPassword = asyncHandler(async (req, res) => {
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"VedaBot Team" <${process.env.EMAIL_USER}>`,
     to: user.email,
-    subject: 'Reset Password for Nexus',
-    text: `You requested a password reset for your Nexus account. Please click on the following link to reset your password: ${resetUrl}`,
+    subject: 'Reset Password for VedaBot',
+    html: getEmailTemplate(resetUrl),
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
