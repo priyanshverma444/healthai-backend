@@ -86,7 +86,12 @@ const registerUser = asyncHandler(async (req, res) => {
     // Check if the user is already registered
     const userAvailable = await User.findOne({ email });
     if (userAvailable) {
-      return res.status(400).json({ error: "User already registered!" });
+      return res.status(409).json({ 
+        error: "User already exists", 
+        message: "An account with this email address already exists. Please use a different email or sign in to your existing account.",
+        action: "redirect_to_login",
+        loginUrl: "/login" // You can customize this based on your frontend routing
+      });
     }
 
     // Hash the password
@@ -126,12 +131,25 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Send a success response
     return res
-      .status(200)
-      .json({ message: "User registered successfully", user, accessToken });
+      .status(201) // Changed to 201 for resource creation
+      .json({ 
+        message: "User registered successfully", 
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          // Don't send sensitive data like password
+        }, 
+        accessToken 
+      });
   } catch (error) {
     // Handle any errors that occur during registration
     console.error("Error:", error);
-    return res.status(500).json({ error: "Registration failed" });
+    return res.status(500).json({ 
+      error: "Registration failed",
+      message: "An error occurred during registration. Please try again.",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
